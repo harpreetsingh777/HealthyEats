@@ -20,6 +20,25 @@ router.get('/', function(req, res, next) {
     });
 });
 
+/* GET single recipe listing. */
+router.get('/:recipe_name', function(req, res, next) {
+    mysqlLib.getConnection(function(err, connection) {
+        let recipe_name = req.params.recipe_name;
+        let query = "SELECT * FROM Recipes WHERE recipe_name = \"" + recipe_name + "\"";
+
+        connection.query(query, function (err, result) {
+            if (err) {
+                sendError(res, err.message, 500);
+            } else {
+                res.status(200).send({
+                    message: 'OK',
+                    data: result
+                });
+            }
+        });
+    });
+});
+
 /* GET ingredients listing. */
 router.get('/ingredients', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {

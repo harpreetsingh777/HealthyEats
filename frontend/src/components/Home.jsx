@@ -27,7 +27,7 @@ class Home extends Component {
             <div className="Home">
                 <h1>Welcome to HealthyEats!</h1>
                 {this.state.recipes.map(recipe =>
-          			<div key={recipe.name}>{recipe.name}</div>
+          			<div key={recipe.recipe_name}>{recipe.recipe_name}</div>
         		)}
             </div>
         )

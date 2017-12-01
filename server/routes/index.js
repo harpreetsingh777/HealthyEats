@@ -6,8 +6,10 @@
 
 import recipes from './recipes';
 import users from './users'
+import favorites from './favorites'
 
 export default {
-  recipes,
-  users
+    recipes,
+    users,
+    favorites
 };
