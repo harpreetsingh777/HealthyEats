@@ -66,7 +66,7 @@ class Home extends Component {
                  <Input onChange = {this.inputChangeHandler} placeholder = "Put in an ingredient!" value = {this.state.value} />
                 <Button onClick = {this.clickHandler}>Search</Button>
                 {this.state.recipes.map(recipe =>
-          			<div key={recipe.name}>Hi</div>
+          			<div key={recipe.recipe_name}>{recipe.recipe_name}</div>
         		)}
             </div>
         )

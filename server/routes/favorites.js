@@ -2,28 +2,15 @@ let express = require('express');
 let router = express.Router();
 let mysqlLib = require("../mySqlLib");
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    mysqlLib.getConnection(function(err, connection) {
-        let query = "SELECT * FROM Users";
-
-        connection.query(query, function (err, result) {
-            if (err) {
-                sendError(res, err.message, 500);
-            } else {
-                res.status(200).send({
-                    message: 'OK',
-                    data: result
-                });
-            }
-        });
-    });
-});
-
-/* GET user with username. */
+/* GET favorites listing. */
 router.get('/:username', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
-        let query = "SELECT * FROM Users WHERE username = \"" + req.params.username + "\"";
+        let username = req.params.username;
+
+        let query = "SELECT * FROM (SELECT U.username, R.recipe_name" +
+            " FROM Users U, Favorites F, Recipes R WHERE " +
+            "F.username = U.username AND F.recipe_name = R.recipe_name) A WHERE " +
+            "A.username = \"" + username + "\"";
 
         connection.query(query, function (err, result) {
             if (err) {
@@ -38,20 +25,40 @@ router.get('/:username', function(req, res, next) {
     });
 });
 
-/* POST user. */
+/* POST Favorite recipe. */
 router.post('/', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
         let username = req.body.username;
-        let password = req.body.password;
-        let first_name = req.body.first_name;
-        let last_name = req.body.last_name;
+        let recipe_name = req.body.recipe_name;
 
-        let query = "INSERT INTO Users VALUES " +
+        let query = "INSERT INTO Favorites VALUES " +
             "(\"" + username + "\", " +
-            "\"" + password + "\", " +
-            "\"" + first_name + "\", " +
-            "\"" + last_name + "\")";
+            "\"" + recipe_name + "\")";
 
+
+        connection.query(query, function (err, result) {
+            if (err) {
+                sendError(res, err.message, 500);
+            } else {
+                res.status(200).send({
+                    message: 'OK',
+                    data: result
+                });
+            }
+        });
+    });
+});
+
+/* DELETE Favorite recipe. */
+router.delete('/', function(req, res, next) {
+    mysqlLib.getConnection(function(err, connection) {
+        let username = req.body.username;
+        let recipe_name = req.body.recipe_name;
+
+        let query = "DELETE FROM Favorites WHERE username = " +
+            "\"" + username + "\"" +
+            " AND recipe_name = " +
+            "\"" + recipe_name + "\"";
 
         connection.query(query, function (err, result) {
             if (err) {
