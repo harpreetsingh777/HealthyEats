@@ -2,7 +2,7 @@ let express = require('express');
 let router = express.Router();
 let mysqlLib = require("../mySqlLib");
 
-/* GET recipes listing. */
+/* GET users listing. */
 router.get('/', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
         let query = "SELECT * FROM Recipes";
