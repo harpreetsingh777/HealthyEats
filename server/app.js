@@ -42,8 +42,8 @@ app.use('/static', express.static(path.join(__dirname, 'public', 'static')));
 /*=====  End of COR  ======*/
 
 // Routes
-app.use('/api/v1', routes.api_v1);
 app.use('/recipes', routes.recipes);
+app.use('/users', routes.users);
 
 // Load React App
 // Serve HTML file for production

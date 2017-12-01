@@ -4,10 +4,10 @@
  *
  */
 
-import api_v1 from './api_v1';
 import recipes from './recipes';
+import users from './users'
 
 export default {
-  api_v1,
-  recipes
+  recipes,
+  users
 };
