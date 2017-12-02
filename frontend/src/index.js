@@ -3,7 +3,7 @@ import {render} from 'react-dom';
 import './index.css';
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 
-import Home from './components/Home.jsx';
+import Home from './components/recipes_view/RecipesView.jsx';
 import Login from './components/login/Login.jsx';
 import SignUp from './components/signup/SignUp.jsx'
 

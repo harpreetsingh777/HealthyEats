@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Button } from 'semantic-ui-react'
+import { Input, Button, Label } from 'semantic-ui-react'
 
 class Login extends Component {
     constructor() {
@@ -18,18 +18,24 @@ class Login extends Component {
     render() {
         return(
             <div className="Login">
-                <h1>HealthyEats</h1>
-                <Input placeholder='Username' size='big'
-                       onChange = {this.usernameChange} id='usernameInput'/>
-                <Input placeholder='Password' size='big'
-                       onChange={this.passwordChange} id='passwordInput'/>
-                <Button id="login" onClick={this.login}>
-                    Login
-                </Button>
-                <h4>Don't have an account?</h4>
-                <Button id="signup" onClick={this.signup}>
-                    Sign Up
-                </Button>
+                <Label size='massive' color='black'>Login</Label>
+                <div>
+                    <Input placeholder='Username' size='big'
+                           onChange = {this.usernameChange} id='usernameInput'/>
+                    <Input placeholder='Password' size='big'
+                           onChange={this.passwordChange} id='passwordInput'/>
+                </div>
+                <div>
+                    <Button id="login" onClick={this.login}>
+                        Login
+                    </Button>
+                </div>
+                <div>
+                    <Label size='massive' color='black'>Don't have an account?</Label>
+                    <Button id="signup" onClick={this.signup}>
+                        Sign Up
+                    </Button>
+                </div>
             </div>
         )
     }

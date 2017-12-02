@@ -1,0 +1,25 @@
+body {
+    background-color: #d6d6d6;
+}
+
+.mainContainer {
+    background-color: #313131;
+    text-align: center;
+    margin: 2% 10%;
+}
+
+.topContainer {
+    padding: 2%;
+}
+
+.buttonsContainer {
+    padding: 2%;
+}
+
+#recipesButton {
+    margin-right: 2%;
+}
+
+#favoritesButton {
+    margin-left: 2%;
+}

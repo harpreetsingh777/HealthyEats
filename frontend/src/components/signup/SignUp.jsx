@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Button } from 'semantic-ui-react'
+import { Input, Button, Label } from 'semantic-ui-react'
 
 class SignUp extends Component {
     constructor() {
@@ -23,21 +23,25 @@ class SignUp extends Component {
     render() {
         return(
             <div className="Login">
-                <h1>Register for HealthyEats</h1>
-                <Input placeholder='Username' size='big'
-                       onChange = {this.usernameChange} id='usernameInput'/>
-                <Input placeholder='Password' size='big'
-                       onChange={this.passwordChange} id='passwordInput'/>
-                <Input placeholder='Username' size='big'
-                       onChange = {this.firstNameChange} id='usernameInput'/>
-                <Input placeholder='Username' size='big'
-                       onChange = {this.lastNameChange} id='usernameInput'/>
-                <Button id="signup" onClick={this.signup}>
-                    Sign Up
-                </Button>
-                <Button id="close" onClick={this.close}>
-                    Close
-                </Button>
+                <Label size='massive' color='black'>Sign Up</Label>
+                <div>
+                    <Input placeholder='Username' size='big'
+                           onChange = {this.usernameChange} id='usernameInput'/>
+                    <Input placeholder='Password' size='big'
+                           onChange={this.passwordChange} id='passwordInput'/>
+                    <Input placeholder='First Name' size='big'
+                           onChange = {this.firstNameChange} id='usernameInput'/>
+                    <Input placeholder='Last Name' size='big'
+                           onChange = {this.lastNameChange} id='usernameInput'/>
+                </div>
+                <div>
+                    <Button id="signup" onClick={this.signup}>
+                        Sign Up
+                    </Button>
+                    <Button id="close" onClick={this.close}>
+                        Close
+                    </Button>
+                </div>
             </div>
         )
     }

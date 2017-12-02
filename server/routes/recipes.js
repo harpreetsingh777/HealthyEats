@@ -5,7 +5,7 @@ let mysqlLib = require("../mySqlLib");
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
-        let query = "SELECT * FROM Recipes";
+        let query = "SELECT * FROM Recipes LIMIT 50";
 
         connection.query(query, function (err, result) {
             if (err) {

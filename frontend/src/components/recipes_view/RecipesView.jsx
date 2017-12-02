@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {Input, Button} from 'semantic-ui-react'
 import RecipeView from './RecipeView.jsx'
+import Tabs from '../tabs_view/Tabs.jsx'
 
 class Home extends Component {
 	constructor() {
@@ -12,6 +13,7 @@ class Home extends Component {
             calories: "",
             restriction: ""
         };
+
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.clickHandler = this.clickHandler.bind(this);
         this.clickAdvanceHandler = this.clickAdvanceHandler.bind(this)
@@ -104,7 +106,7 @@ class Home extends Component {
     render() {
         return(
             <div className="Home">
-                <h1>Welcome to HealthyEats!</h1>
+                <Tabs />
                  <Input onChange = {this.inputChangeHandler} placeholder = "Put in a recipe!" value = {this.state.value} />
                 <Button onClick = {this.clickHandler}>Search</Button>
                 <h3> OR </h3>
