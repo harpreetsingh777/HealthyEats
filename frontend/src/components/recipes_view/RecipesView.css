@@ -1,4 +1,36 @@
-.Home{
-	color: lightgreen;
-	text-align: center;
+.listMainContainer {
+	background-color: white;
+}
+
+.tabsContainer {
+	min-width: 100%;
+	background-color: #313131;
+}
+
+.listRecipesContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0% 0%;
+	background-color: white;
+}
+
+.listButtonsContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	background-color: #404040;
+	padding: 2%;
+	min-width: 100%;
+	margin-bottom: 0%;
+}
+
+#listInput {
+	margin-right: 2%;
+}
+
+#searchButton {
+	margin-left: 2%;
 }

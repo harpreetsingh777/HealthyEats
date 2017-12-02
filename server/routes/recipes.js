@@ -24,7 +24,8 @@ router.get('/', function(req, res, next) {
 router.get('/:recipe_name', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
         let recipe_name = req.params.recipe_name;
-        let query = "SELECT * FROM Recipes WHERE recipe_name = \"" + recipe_name + "\"";
+        let query = "SELECT * FROM Recipes WHERE recipe_name " +
+            "LIKE \"%" + recipe_name + "%\" LIMIT 50";
 
         connection.query(query, function (err, result) {
             if (err) {

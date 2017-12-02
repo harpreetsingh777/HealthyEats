@@ -1,125 +1,108 @@
 import React, { Component } from 'react'
-import {Input, Button} from 'semantic-ui-react'
+import { Input, Button } from 'semantic-ui-react'
+
 import RecipeView from './RecipeView.jsx'
 import Tabs from '../tabs_view/Tabs.jsx'
 
-class Home extends Component {
-	constructor() {
+import './RecipesView.css'
+
+class RecipesView extends Component {
+    constructor() {
         super();
         this.state = {
-            value: "",
-            recipes: [],
-            filteredRecipe: [],
-            calories: "",
-            restriction: ""
+            recipes: []
         };
 
-        this.inputChangeHandler = this.inputChangeHandler.bind(this);
-        this.clickHandler = this.clickHandler.bind(this);
-        this.clickAdvanceHandler = this.clickAdvanceHandler.bind(this)
-        this.inputCalorieChangeHandler = this.inputCalorieChangeHandler.bind(this)
-        this.inputDietChangeHandler = this.inputDietChangeHandler.bind(this)
+        this.searchParam = "";
+
+        this.searchRecipes = this.searchRecipes.bind(this);
+        this.searchValueChange = this.searchValueChange.bind(this);
     }
 
     componentDidMount() {
-	    fetch('/recipes')
-	    	.then((response) => response.json())
-	        .then((jsonResponse) => jsonResponse.data)
-	        .then ((recipesData) => {
-	            this.setState({
-	            	recipes: recipesData
-	            });
-	        })
-	        .catch((error) => {
-	            console.log(error);
-	        })
-  	}
-
-    inputChangeHandler(event){
-        this.setState({value: event.target.value});
+        this.fetchData();
     }
 
-    clickHandler(){
-        let tempIngredients = [];
-        let tempRecipes = [];
-        this.state.recipes.map((recipe) =>{
-            if (recipe.recipe_name === this.state.value){
-                let tempRecipe = {
-                    recipe_name: recipe.recipe_name,
-                    image_url: recipe.image_url,
-                    calories: recipe.calories,
-                    ingredients: []
-                }
-                let recipeURL = '/recipes/ingredients/' + recipe.recipe_name + "/"
-                fetch(recipeURL)
-                .then((response) => response.json())
-                .then((jsonResponse) => jsonResponse.data)
-                .then((ingredientsData) =>{
-                    ingredientsData.map( (ingredient) => {
-                        tempIngredients.push(ingredient.ingredient_name);
-                        tempRecipe.ingredients = tempIngredients
-                    })
-                    tempRecipes.push(tempRecipe);
-                    this.setState({ filteredRecipe: tempRecipes})
-                    console.log(this.state.filteredRecipe)
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-            }
-        })
-    }
-
-    inputCalorieChangeHandler(event){
-        this.setState({calorie: event.target.value})
-    }
-
-    inputDietChangeHandler(event){
-        this.setState({ restriction: event.target.value})
-    }
-//Need to finish filtering by calories and dietary restrictions
-
-    clickAdvanceHandler(){
-        let tempIngredients = [];
-        this.state.recipes.map((recipe) =>{
-            if (this.state.calories.length == 0 || recipe.calories <= this.state.calories){
-                let recipeURL = '/recipes/ingredients/' + recipe.recipe_name + "/"
-                fetch(recipeURL)
-                .then((response) => response.json())
-                .then((jsonResponse) => jsonResponse.data)
-                .then((ingredientsData) =>{
-                    ingredientsData.map( (ingredient) => {
-                        tempIngredients.push(ingredient.ingredient_name);
-                        this.setState({
-                            filteredIngredients: tempIngredients
-                        })
-                        console.log(tempIngredients);
-                    })
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-            }
-        })
-    }
-    //RecipeView not rendering for some reason
     render() {
-        return(
-            <div className="Home">
-                <Tabs />
-                 <Input onChange = {this.inputChangeHandler} placeholder = "Put in a recipe!" value = {this.state.value} />
-                <Button onClick = {this.clickHandler}>Search</Button>
-                <h3> OR </h3>
-                 <Input onChange = {this.inputCalorieChangeHandler} placeholder = "Put in a calorie amount!" value = {this.state.calories} />
-                <Input onChange = {this.inputDietChangeHandler} placeholder = "Put in a dietary restriction!" value = {this.state.restriction} />
-                 <Button onClick = {this.clickAdvanceHandler}>Search</Button>
-                 { this.state.filteredRecipe.map((recipe) => {
-                    <RecipeView recipe = {recipe}></RecipeView>
-                    })
-                } 
+        return this.renderRecipes();
+    }
+
+    renderRecipes() {
+        let recipeCards = this.state.recipes.map((recipe, idx) => {
+            let recipeName = recipe.recipe_name;
+            let imageUrl = recipe.image_url;
+            let calories = recipe.calories;
+            let totalWeight = recipe.total_weight;
+
+            return (
+                <RecipeView
+                    recipeName={recipeName}
+                    imageUrl={imageUrl}
+                    calories={calories}
+                    totalWeight={totalWeight}
+                    key={idx}
+                />
+            );
+        });
+        // Finished populating recipes
+
+        return (
+            <div className="listMainContainer">
+                <div className="tabsContainer">
+                    <Tabs />
+                </div>
+                <div className="listButtonsContainer">
+                    <Input placeholder='Search...' size='big' id='listInput'
+                           onChange={this.searchValueChange}/>
+                    <Button id="searchButton" onClick={this.searchRecipes}>
+                        Search
+                    </Button>
+                </div>
+                <div className="listRecipesContainer">
+                    {recipeCards}
+                </div>
             </div>
         )
     }
+
+    searchRecipes(e) {
+        this.fetchData();
+    }
+
+    searchValueChange(e) {
+        this.searchParam = e.target.value;
+    }
+
+    fetchData() {
+        let searchParam = this.searchParam;
+
+        if (!searchParam) {
+            fetch('/recipes')
+                .then((response) => response.json())
+                .then((jsonResponse) => jsonResponse.data)
+                .then ((recipesData) => {
+                    this.setState({
+                        recipes: recipesData
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        } else {
+            let url = '/recipes/' + searchParam;
+            fetch(url)
+                .then((response) => response.json())
+                .then((jsonResponse) => jsonResponse.data)
+                .then ((recipesData) => {
+                    this.setState({
+                        recipes: recipesData
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+    }
 }
 
-export default Home
+export default RecipesView

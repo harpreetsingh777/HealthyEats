@@ -1,39 +1,19 @@
 import React, { Component } from 'react'
-import { Button, Card } from 'semantic-ui-react'
+import './RecipeView.css'
 
 class RecipeView extends Component {
-	constructor(){
-		super();
-		this.clickFavoriteHandler = this.clickFavoriteHandler.bind(this)
-	}
-
-	clickFavoriteHandler(){
-
-    }
-
     render() {
-    	let ingredientsView;
-    	if(this.props.recipe.length === 0){
-    		return <div>No Recipe!</div>
-    	}
-    	else{
-    		 ingredientsView = this.props.recipe.ingredients.map( (ingredient) =>{
-    			return <p>{ingredient} </p>
-    		})
-    	}
-    	return(
-    	<Card className="RecipeView">
-            <Card.Content>
-            	<Card.Header>
-                    {this.props.recipe.recipe_name}
-                </Card.Header>
-                <img src={this.props.recipe.image_url} />
-                <h4>Ingredients</h4>
-                {ingredientsView}
-                <Button onClick = {this.clickFavoriteHandler}> Favorite </Button>
-             </Card.Content>
-           </Card>
-       )
+        return (
+            <div className="listRecipeContainer">
+                <div className="listRecipeImageContainer">
+                    <img className="listRecipeImage" src={this.props.imageUrl} alt="Recipe"/>
+                </div>
+                <div className="listRecipeContent">
+                    <h3>{this.props.recipeName}</h3>
+                    <p>{"Calories: " + this.props.calories}</p>
+                </div>
+            </div>
+        )
     }
 }
 
