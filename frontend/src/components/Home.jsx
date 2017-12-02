@@ -5,7 +5,7 @@ import styles from './Home.css'
 import RecipeView from './RecipeView.jsx'
 
 class Home extends Component {
-    constructor() {
+	constructor() {
         super();
         this.state = {
             value: "",
@@ -22,18 +22,18 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        fetch('/recipes')
-            .then((response) => response.json())
-            .then((jsonResponse) => jsonResponse.data)
-            .then ((recipesData) => {
-                this.setState({
-                    recipes: recipesData
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
+	    fetch('/recipes')
+	    	.then((response) => response.json())
+	        .then((jsonResponse) => jsonResponse.data)
+	        .then ((recipesData) => {
+	            this.setState({
+	            	recipes: recipesData
+	            });
+	        })
+	        .catch((error) => {
+	            console.log(error);
+	        })
+  	}
 
     inputChangeHandler(event){
         this.setState({value: event.target.value});
@@ -52,20 +52,20 @@ class Home extends Component {
                 }
                 let recipeURL = '/recipes/ingredients/' + recipe.recipe_name + "/"
                 fetch(recipeURL)
-                    .then((response) => response.json())
-                    .then((jsonResponse) => jsonResponse.data)
-                    .then((ingredientsData) =>{
-                        ingredientsData.map( (ingredient) => {
-                            tempIngredients.push(ingredient.ingredient_name);
-                            tempRecipe.ingredients = tempIngredients
-                        })
-                        tempRecipes.push(tempRecipe);
-                        this.setState({ filteredRecipe: tempRecipes})
-                        console.log(this.state.filteredRecipe)
+                .then((response) => response.json())
+                .then((jsonResponse) => jsonResponse.data)
+                .then((ingredientsData) =>{
+                    ingredientsData.map( (ingredient) => {
+                        tempIngredients.push(ingredient.ingredient_name);
+                        tempRecipe.ingredients = tempIngredients
                     })
-                    .catch((error) => {
-                        console.log(error);
-                    })
+                    tempRecipes.push(tempRecipe);
+                    this.setState({ filteredRecipe: tempRecipes})
+                    console.log(this.state.filteredRecipe)
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
             }
         })
     }
@@ -85,20 +85,20 @@ class Home extends Component {
             if (this.state.calories.length == 0 || recipe.calories <= this.state.calories){
                 let recipeURL = '/recipes/ingredients/' + recipe.recipe_name + "/"
                 fetch(recipeURL)
-                    .then((response) => response.json())
-                    .then((jsonResponse) => jsonResponse.data)
-                    .then((ingredientsData) =>{
-                        ingredientsData.map( (ingredient) => {
-                            tempIngredients.push(ingredient.ingredient_name);
-                            this.setState({
-                                filteredIngredients: tempIngredients
-                            })
-                            console.log(tempIngredients);
+                .then((response) => response.json())
+                .then((jsonResponse) => jsonResponse.data)
+                .then((ingredientsData) =>{
+                    ingredientsData.map( (ingredient) => {
+                        tempIngredients.push(ingredient.ingredient_name);
+                        this.setState({
+                            filteredIngredients: tempIngredients
                         })
+                        console.log(tempIngredients);
                     })
-                    .catch((error) => {
-                        console.log(error);
-                    })
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
             }
         })
     }
@@ -107,16 +107,16 @@ class Home extends Component {
         return(
             <div className="Home">
                 <h1>Welcome to HealthyEats!</h1>
-                <Input onChange = {this.inputChangeHandler} placeholder = "Put in a recipe!" value = {this.state.value} />
+                 <Input onChange = {this.inputChangeHandler} placeholder = "Put in a recipe!" value = {this.state.value} />
                 <Button onClick = {this.clickHandler}>Search</Button>
                 <h3> OR </h3>
-                <Input onChange = {this.inputCalorieChangeHandler} placeholder = "Put in a calorie amount!" value = {this.state.calories} />
+                 <Input onChange = {this.inputCalorieChangeHandler} placeholder = "Put in a calorie amount!" value = {this.state.calories} />
                 <Input onChange = {this.inputDietChangeHandler} placeholder = "Put in a dietary restriction!" value = {this.state.restriction} />
-                <Button onClick = {this.clickAdvanceHandler}>Search</Button>
-                { this.state.filteredRecipe.map((recipe) => {
+                 <Button onClick = {this.clickAdvanceHandler}>Search</Button>
+                 { this.state.filteredRecipe.map((recipe) => {
                     <RecipeView recipe = {recipe}></RecipeView>
-                })
-                }
+                    })
+                } 
             </div>
         )
     }
