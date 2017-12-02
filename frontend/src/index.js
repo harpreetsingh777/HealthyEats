@@ -10,8 +10,8 @@ render(<Router>
         <div className="mainContainer">
             <div className="topContainer">
                 <div className="buttonsContainer">
-                    <Link to="/recipes"></Link>
-                    <Link to="/users"></Link>
+                    <Link to="/recipes">Recipes</Link>
+                    <Link to="/users">Users</Link>
                 </div>
             </div>
 
