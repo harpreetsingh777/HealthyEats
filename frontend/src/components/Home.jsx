@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import {Input, Button, Card} from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import styles from './Home.css'
+import {Input, Button} from 'semantic-ui-react'
 import RecipeView from './RecipeView.jsx'
 
 class Home extends Component {

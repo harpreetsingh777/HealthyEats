@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, Label, Icon } from 'semantic-ui-react'
-import { Router, Route, Link } from 'react-router-dom'
+import { Button, Card } from 'semantic-ui-react'
 
 class RecipeView extends Component {
 	constructor(){
