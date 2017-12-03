@@ -6,6 +6,8 @@ import 'semantic-ui-css/semantic.min.css';
 import UserProfile from '../UserProfile'
 
 import './Tabs.css'
+import ListIcon from '../../assets/list_icon.svg'
+import FavoriteIcon from '../../assets/favorite_icon.svg'
 
 class Tabs extends Component {
 
@@ -20,12 +22,24 @@ class Tabs extends Component {
                     </div>
                     <div className="buttonsContainer">
                         <Link to="/recipes">
-                            <Button inverted={false} size='big'
-                                    id="recipesButton">All Recipes</Button>
+                            <Button animated='fade' inverted={false} size='huge' id="listButton">
+                                <Button.Content visible>
+                                    <img src={ListIcon} alt={"all recipes"}/>
+                                </Button.Content>
+                                <Button.Content hidden>
+                                    Recipes
+                                </Button.Content>
+                            </Button>
                         </Link>
                         <Link to="/favorites">
-                            <Button inverted={false} size='big'
-                                    id="favoritesButton">Favorites</Button>
+                            <Button animated='fade' inverted={false} size='huge' id="collectionButton">
+                                <Button.Content visible>
+                                    <img src={FavoriteIcon} alt="favorited recipes"/>
+                                </Button.Content>
+                                <Button.Content hidden>
+                                    Favorites
+                                </Button.Content>
+                            </Button>
                         </Link>
                     </div>
                 </div>
