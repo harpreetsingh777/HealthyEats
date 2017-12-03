@@ -5,6 +5,7 @@ import RecipeView from './RecipeView.jsx'
 import Tabs from '../tabs_view/Tabs.jsx'
 
 import './RecipesView.css'
+import UserProfile from "../UserProfile";
 
 class RecipesView extends Component {
     constructor() {
@@ -18,6 +19,7 @@ class RecipesView extends Component {
         this.searchRecipes = this.searchRecipes.bind(this);
         this.searchValueChange = this.searchValueChange.bind(this);
         this.recipeClick = this.recipeClick.bind(this);
+        this.favoriteClick = this.favoriteClick.bind(this);
     }
 
     componentDidMount() {
@@ -43,6 +45,8 @@ class RecipesView extends Component {
                     totalWeight={totalWeight}
                     key={idx}
                     recipeClick={this.recipeClick.bind(this, idx)}
+                    favoriteClick={this.favoriteClick.bind(this, idx)}
+                    favoriteButtonString="Add Favorite"
                 />
             );
         });
@@ -73,6 +77,32 @@ class RecipesView extends Component {
             recipes: this.state.recipes,
             currIndex: idx
         });
+    }
+
+    favoriteClick(idx, e) {
+        e.stopPropagation();
+
+        let favoritedRecipe = this.state.recipes[idx];
+
+        let username = UserProfile.getUsername();
+        let recipeName = favoritedRecipe.recipe_name;
+        let imageUrl = favoritedRecipe.image_url;
+
+        let postObject = {
+            username: username,
+            recipe_name: recipeName,
+            image_url: imageUrl
+        };
+
+        let data = JSON.stringify(postObject);
+
+        let url = '/favorites';
+
+        fetch(url, {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: data
+        })
     }
 
     searchRecipes(e) {

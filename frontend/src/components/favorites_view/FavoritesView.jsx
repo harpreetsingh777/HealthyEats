@@ -14,6 +14,7 @@ class FavoritesView extends Component {
         };
 
         this.recipeClick = this.recipeClick.bind(this);
+        this.favoriteClick = this.favoriteClick.bind(this);
     }
 
     componentDidMount() {
@@ -39,6 +40,8 @@ class FavoritesView extends Component {
                     totalWeight={totalWeight}
                     key={idx}
                     recipeClick={this.recipeClick.bind(this, idx)}
+                    favoriteClick={this.favoriteClick.bind(this, idx)}
+                    favoriteButtonString="Remove Favorite"
                 />
             );
         });
@@ -62,6 +65,32 @@ class FavoritesView extends Component {
             recipes: this.state.recipes,
             currIndex: idx
         });
+    }
+
+    favoriteClick(idx, e) {
+        e.stopPropagation();
+
+        let unfavoritedRecipe = this.state.recipes[idx];
+
+        let username = UserProfile.getUsername();
+        let recipeName = unfavoritedRecipe.recipe_name;
+        let imageUrl = unfavoritedRecipe.image_url;
+
+        let deleteObject = {
+            username: username,
+            recipe_name: recipeName,
+            image_url: imageUrl
+        };
+
+        let data = JSON.stringify(deleteObject);
+
+        let url = '/favorites';
+
+        fetch(url, {
+            method: 'delete',
+            headers: {'Content-Type': 'application/json'},
+            body: data
+        }).then((response) => this.fetchData())
     }
 
     fetchData() {

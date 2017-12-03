@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import './RecipeView.css'
+import { Button } from 'semantic-ui-react'
+
 
 class RecipeView extends Component {
     render() {
@@ -11,6 +13,9 @@ class RecipeView extends Component {
                 <div className="listRecipeContent">
                     <h3>{this.props.recipeName}</h3>
                     <p>{"Calories: " + this.props.calories}</p>
+                    <Button id="favorite" onClick={this.props.favoriteClick}>
+                        {this.props.favoriteButtonString}
+                    </Button>
                 </div>
             </div>
         )

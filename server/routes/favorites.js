@@ -10,7 +10,9 @@ router.get('/:username', function(req, res, next) {
         let query = "SELECT * FROM (SELECT U.username, R.recipe_name, R.image_url, " +
             "R.calories, R.total_weight" +
             " FROM Users U, Favorites F, Recipes R WHERE " +
-            "F.username = U.username AND F.recipe_name = R.recipe_name) A WHERE " +
+            "F.username = U.username AND " +
+            "F.recipe_name = R.recipe_name AND " +
+            "F.image_url = R.image_url) A WHERE " +
             "A.username = \"" + username + "\"";
 
         connection.query(query, function (err, result) {
@@ -29,13 +31,12 @@ router.get('/:username', function(req, res, next) {
 /* POST Favorite recipe. */
 router.post('/', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
-        let username = req.body.username;
-        let recipe_name = req.body.recipe_name;
+        let username = connection.escape(req.body.username);
+        let recipe_name = connection.escape(req.body.recipe_name);
+        let image_url = connection.escape(req.body.image_url);
 
         let query = "INSERT INTO Favorites VALUES " +
-            "(\"" + username + "\", " +
-            "\"" + recipe_name + "\")";
-
+            "(" + username + ", " + recipe_name + ", " + image_url + ")";
 
         connection.query(query, function (err, result) {
             if (err) {
@@ -53,13 +54,14 @@ router.post('/', function(req, res, next) {
 /* DELETE Favorite recipe. */
 router.delete('/', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
-        let username = req.body.username;
-        let recipe_name = req.body.recipe_name;
+        let username = connection.escape(req.body.username);
+        let recipe_name = connection.escape(req.body.recipe_name);
+        let image_url = connection.escape(req.body.image_url);
 
-        let query = "DELETE FROM Favorites WHERE username = " +
-            "\"" + username + "\"" +
-            " AND recipe_name = " +
-            "\"" + recipe_name + "\"";
+        let query = "DELETE FROM Favorites WHERE " +
+            "username = " + username +
+            " AND recipe_name = " + recipe_name +
+            " AND image_url = " + image_url;
 
         connection.query(query, function (err, result) {
             if (err) {
