@@ -19,7 +19,7 @@ class Tabs extends Component {
                             <Button inverted={false} size='big'
                                     id="recipesButton">All Recipes</Button>
                         </Link>
-                        <Link to="/recipes">
+                        <Link to="/favorites">
                             <Button inverted={false} size='big'
                                     id="favoritesButton">Favorites</Button>
                         </Link>

@@ -9,7 +9,8 @@ class DetailsView extends Component {
         super();
         this.state = {
             recipes: null,
-            currIndex: 0
+            currIndex: 0,
+            ingredients: []
         };
 
         this.moveLeft = this.moveLeft.bind(this);
@@ -18,10 +19,15 @@ class DetailsView extends Component {
 
     componentDidMount() {
         let location = this.props.location;
+
         this.setState({
             recipes: location.recipes,
             currIndex: location.currIndex
-        })
+        });
+
+        if (location.recipes != null && location.currIndex != null) {
+            this.fetchIngredients(location.recipes[location.currIndex].recipe_name);
+        }
     }
 
     render() {
@@ -46,6 +52,15 @@ class DetailsView extends Component {
         let calories = recipe.calories;
         let totalWeight = recipe.total_weight;
 
+        let ingredientCards = this.state.ingredients.map((ingredient, idx) => {
+            let ingredientName = ingredient.ingredient_name;
+
+            return (
+                <div key={idx}>{ingredientName}</div>
+            );
+        });
+        // Finished populating recipes
+
         return (
             <div>
                 <div className="tabsContainer">
@@ -65,8 +80,10 @@ class DetailsView extends Component {
                     </div>
                     <div className="detailsRecipeContent">
                         <h3>{recipeName}</h3>
-                        <p>{calories}</p>
-                        <p>{totalWeight}</p>
+                        <p>{"Calories: " + calories}</p>
+                        <p>{"Total Weight: " + totalWeight}</p>
+                        <h5>Ingredients</h5>
+                        <div>{ingredientCards}</div>
                     </div>
                 </div>
             </div>
@@ -75,27 +92,50 @@ class DetailsView extends Component {
 
     // Handler functions
     moveLeft() {
+        let newIndex;
         if (this.state.currIndex === 0) {
-            this.setState({
-                currIndex: this.state.recipes.length - 1
-            })
+            newIndex = this.state.recipes.length - 1;
         } else {
-            this.setState({
-                currIndex: this.state.currIndex - 1
-            })
+            newIndex = this.state.currIndex - 1;
         }
+
+        this.setState({
+            currIndex: newIndex,
+            ingredients: []
+        });
+
+        this.fetchIngredients(this.state.recipes[newIndex].recipe_name);
     }
 
     moveRight() {
+        let newIndex;
         if (this.state.currIndex === (this.state.recipes.length-1)) {
-            this.setState({
-                currIndex: 0
-            })
+            newIndex = 0;
         } else {
-            this.setState({
-                currIndex: this.state.currIndex + 1
-            })
+            newIndex = this.state.currIndex + 1;
         }
+
+        this.setState({
+            currIndex: newIndex,
+            ingredients: []
+        });
+
+        this.fetchIngredients(this.state.recipes[newIndex].recipe_name);
+    }
+
+    fetchIngredients(recipeName) {
+        let url = '/recipes/ingredients/' + recipeName;
+        fetch(url)
+            .then((response) => response.json())
+            .then((jsonResponse) => jsonResponse.data)
+            .then ((ingredientsData) => {
+                this.setState({
+                    ingredients: ingredientsData
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 }
 
