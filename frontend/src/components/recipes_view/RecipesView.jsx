@@ -58,7 +58,7 @@ class RecipesView extends Component {
                     <Tabs />
                 </div>
                 <div className="listButtonsContainer">
-                    <Input placeholder='Search...' size='big' id='listInput'
+                    <Input placeholder='Search Recipes...' size='big' id='listInput'
                            onChange={this.searchValueChange}/>
                     <Button id="searchButton" onClick={this.searchRecipes}>
                         Search

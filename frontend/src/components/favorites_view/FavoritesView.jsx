@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Input, Button } from 'semantic-ui-react'
 
 import RecipeView from '../recipes_view/RecipeView.jsx'
 import Tabs from '../tabs_view/Tabs.jsx'
@@ -12,6 +13,11 @@ class FavoritesView extends Component {
         this.state = {
             recipes: []
         };
+
+        this.searchParam = "";
+
+        this.searchRecipes = this.searchRecipes.bind(this);
+        this.searchValueChange = this.searchValueChange.bind(this);
 
         this.recipeClick = this.recipeClick.bind(this);
         this.favoriteClick = this.favoriteClick.bind(this);
@@ -51,6 +57,13 @@ class FavoritesView extends Component {
             <div className="listMainContainer">
                 <div className="tabsContainer">
                     <Tabs />
+                </div>
+                <div className="listButtonsContainer">
+                    <Input placeholder='Search Favorites...' size='big' id='listInput'
+                           onChange={this.searchValueChange}/>
+                    <Button id="searchButton" onClick={this.searchRecipes}>
+                        Search
+                    </Button>
                 </div>
                 <div className="listRecipesContainer">
                     {recipeCards}
@@ -93,20 +106,47 @@ class FavoritesView extends Component {
         }).then((response) => this.fetchData())
     }
 
+    searchRecipes(e) {
+        this.fetchData();
+    }
+
+    searchValueChange(e) {
+        this.searchParam = e.target.value;
+    }
+
     fetchData() {
+        let searchParam = this.searchParam;
         let username = UserProfile.getUsername();
-        let url = '/favorites/' + username;
-        fetch(url)
-            .then((response) => response.json())
-            .then((jsonResponse) => jsonResponse.data)
-            .then ((recipesData) => {
-                this.setState({
-                    recipes: recipesData
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+
+        if (!searchParam) {
+            let url = '/favorites/' + username;
+            fetch(url)
+                .then((response) => response.json())
+                .then((jsonResponse) => jsonResponse.data)
+                .then ((recipesData) => {
+                    this.setState({
+                        recipes: recipesData
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        } else {
+            let url = '/favorites/' + username + "/" + searchParam;
+            fetch(url)
+                .then((response) => response.json())
+                .then((jsonResponse) => jsonResponse.data)
+                .then ((recipesData) => {
+                    this.setState({
+                        recipes: recipesData
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+
+
     }
 }
 

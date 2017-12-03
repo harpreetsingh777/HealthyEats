@@ -28,6 +28,34 @@ router.get('/:username', function(req, res, next) {
     });
 });
 
+/* GET favorites listing for the search param. */
+router.get('/:username/:recipe_name', function(req, res, next) {
+    mysqlLib.getConnection(function(err, connection) {
+        let username = req.params.username;
+        let recipe_name = req.params.recipe_name;
+
+        let query = "SELECT * FROM (SELECT U.username, R.recipe_name, R.image_url, " +
+            "R.calories, R.total_weight" +
+            " FROM Users U, Favorites F, Recipes R WHERE " +
+            "F.username = U.username AND " +
+            "F.recipe_name = R.recipe_name AND " +
+            "F.image_url = R.image_url) A WHERE " +
+            "A.username = \"" + username + "\" AND A.recipe_name " +
+            "LIKE \"%" + recipe_name + "%\" LIMIT 50";
+
+        connection.query(query, function (err, result) {
+            if (err) {
+                sendError(res, err.message, 500);
+            } else {
+                res.status(200).send({
+                    message: 'OK',
+                    data: result
+                });
+            }
+        });
+    });
+});
+
 /* POST Favorite recipe. */
 router.post('/', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
