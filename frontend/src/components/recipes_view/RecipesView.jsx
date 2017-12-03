@@ -17,6 +17,7 @@ class RecipesView extends Component {
 
         this.searchRecipes = this.searchRecipes.bind(this);
         this.searchValueChange = this.searchValueChange.bind(this);
+        this.recipeClick = this.recipeClick.bind(this);
     }
 
     componentDidMount() {
@@ -41,6 +42,7 @@ class RecipesView extends Component {
                     calories={calories}
                     totalWeight={totalWeight}
                     key={idx}
+                    recipeClick={this.recipeClick.bind(this, idx)}
                 />
             );
         });
@@ -63,6 +65,14 @@ class RecipesView extends Component {
                 </div>
             </div>
         )
+    }
+
+    recipeClick(idx) {
+        this.props.history.push({
+            pathname: '/details',
+            recipes: this.state.recipes,
+            currIndex: idx
+        });
     }
 
     searchRecipes(e) {

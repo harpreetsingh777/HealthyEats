@@ -4,7 +4,7 @@ import './RecipeView.css'
 class RecipeView extends Component {
     render() {
         return (
-            <div className="listRecipeContainer">
+            <div className="listRecipeContainer" onClick={this.props.recipeClick}>
                 <div className="listRecipeImageContainer">
                     <img className="listRecipeImage" src={this.props.imageUrl} alt="Recipe"/>
                 </div>
