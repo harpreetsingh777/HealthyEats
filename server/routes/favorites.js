@@ -7,7 +7,8 @@ router.get('/:username', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
         let username = req.params.username;
 
-        let query = "SELECT * FROM (SELECT U.username, R.recipe_name" +
+        let query = "SELECT * FROM (SELECT U.username, R.recipe_name, R.image_url, " +
+            "R.calories, R.total_weight" +
             " FROM Users U, Favorites F, Recipes R WHERE " +
             "F.username = U.username AND F.recipe_name = R.recipe_name) A WHERE " +
             "A.username = \"" + username + "\"";

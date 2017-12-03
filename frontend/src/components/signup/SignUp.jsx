@@ -95,7 +95,7 @@ class SignUp extends Component {
         .then((jsonResponse) => jsonResponse.data)
         .then((data) => {
             this.props.history.push({
-                pathname: '/recipes'
+                pathname: '/login'
             });
         })
         .catch((error) => {

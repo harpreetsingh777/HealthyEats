@@ -12,15 +12,13 @@ class FavoritesView extends Component {
             recipes: []
         };
 
-        this.searchParam = "";
-
-        this.searchRecipes = this.searchRecipes.bind(this);
-        this.searchValueChange = this.searchValueChange.bind(this);
         this.recipeClick = this.recipeClick.bind(this);
     }
 
     componentDidMount() {
         this.fetchData();
+
+        console.log(window.topicText);
     }
 
     render() {
@@ -67,43 +65,19 @@ class FavoritesView extends Component {
         });
     }
 
-    searchRecipes(e) {
-        this.fetchData();
-    }
-
-    searchValueChange(e) {
-        this.searchParam = e.target.value;
-    }
-
     fetchData() {
-        let searchParam = this.searchParam;
-
-        if (!searchParam) {
-            fetch('/recipes')
-                .then((response) => response.json())
-                .then((jsonResponse) => jsonResponse.data)
-                .then ((recipesData) => {
-                    this.setState({
-                        recipes: recipesData
-                    });
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-        } else {
-            let url = '/recipes/' + searchParam;
-            fetch(url)
-                .then((response) => response.json())
-                .then((jsonResponse) => jsonResponse.data)
-                .then ((recipesData) => {
-                    this.setState({
-                        recipes: recipesData
-                    });
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-        }
+        let url = '/favorites/' + window.topicText;
+        fetch(url)
+            .then((response) => response.json())
+            .then((jsonResponse) => jsonResponse.data)
+            .then ((recipesData) => {
+                this.setState({
+                    recipes: recipesData
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 }
 

@@ -64,7 +64,8 @@ class Login extends Component {
             .then((user) => {
                 if (password === user[0].password) {
                     this.props.history.push({
-                        pathname: '/recipes'
+                        pathname: '/recipes',
+                        username: this.state.username
                     });
                 } else {
                     console.log('login unsuccessful');
