@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import RecipeView from '../recipes_view/RecipeView.jsx'
 import Tabs from '../tabs_view/Tabs.jsx'
+import UserProfile from '../UserProfile'
 
 import '../recipes_view/RecipesView.css'
 
@@ -17,8 +18,6 @@ class FavoritesView extends Component {
 
     componentDidMount() {
         this.fetchData();
-
-        console.log(window.topicText);
     }
 
     render() {
@@ -66,7 +65,8 @@ class FavoritesView extends Component {
     }
 
     fetchData() {
-        let url = '/favorites/' + window.topicText;
+        let username = UserProfile.getUsername();
+        let url = '/favorites/' + username;
         fetch(url)
             .then((response) => response.json())
             .then((jsonResponse) => jsonResponse.data)

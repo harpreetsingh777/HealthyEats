@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Input, Button, Label } from 'semantic-ui-react'
 
+import UserProfile from '../UserProfile'
+
 class Login extends Component {
     constructor() {
         super();
@@ -61,11 +63,15 @@ class Login extends Component {
         fetch(url)
             .then((response) => response.json())
             .then((jsonResponse) => jsonResponse.data)
-            .then((user) => {
-                if (password === user[0].password) {
+            .then((users) => {
+                let user = users[0];
+                if (password === user.password) {
+                    UserProfile.setUsername(user.username);
+                    UserProfile.setFirstName(user.first_name);
+                    UserProfile.setLastName(user.last_name);
+
                     this.props.history.push({
                         pathname: '/recipes',
-                        username: this.state.username
                     });
                 } else {
                     console.log('login unsuccessful');

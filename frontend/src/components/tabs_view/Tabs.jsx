@@ -3,6 +3,8 @@ import { Button, Label } from 'semantic-ui-react'
 import {Link} from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css';
 
+import UserProfile from '../UserProfile'
+
 import './Tabs.css'
 
 class Tabs extends Component {
@@ -12,7 +14,9 @@ class Tabs extends Component {
             <div className="mainContainer">
                 <div className="topContainer">
                     <div>
-                        <Label size='massive' color='black'>HealthyEats</Label>
+                        <Label size='massive' color='black'>
+                            Welcome to HealthyEats {UserProfile.getFirstName()} {UserProfile.getLastName()}!
+                        </Label>
                     </div>
                     <div className="buttonsContainer">
                         <Link to="/recipes">

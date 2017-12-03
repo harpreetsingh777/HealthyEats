@@ -22,10 +22,6 @@ class RecipesView extends Component {
 
     componentDidMount() {
         this.fetchData();
-
-        let location = this.props.location;
-        window.topicText = location.username;
-        console.log(window.topicText);
     }
 
     render() {
