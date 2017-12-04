@@ -8,6 +8,7 @@ import SignUp from './components/signup/SignUp.jsx'
 import RecipesView from "./components/recipes_view/RecipesView";
 import DetailsView from "./components/details_view/DetailsView";
 import FavoritesView from "./components/favorites_view/FavoritesView"
+import SettingsView from "./components/settings_view/SettingsView"
 
 render(<Router>
         <div className="mainContainer">
@@ -16,5 +17,6 @@ render(<Router>
             <Route path="/recipes" component={RecipesView} />
             <Route path="/favorites" component={FavoritesView} />
             <Route path="/details" component={DetailsView} />
+            <Route path="/settings" component={SettingsView} />
         </div>
     </Router>, document.getElementById('root'));
