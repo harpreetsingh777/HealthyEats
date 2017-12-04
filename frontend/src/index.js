@@ -9,6 +9,7 @@ import RecipesView from "./components/recipes_view/RecipesView";
 import DetailsView from "./components/details_view/DetailsView";
 import FavoritesView from "./components/favorites_view/FavoritesView"
 import SettingsView from "./components/settings_view/SettingsView"
+import SuggestedView from "./components/suggested_view/SuggestedView"
 
 render(<Router>
         <div className="mainContainer">
@@ -18,5 +19,6 @@ render(<Router>
             <Route path="/favorites" component={FavoritesView} />
             <Route path="/details" component={DetailsView} />
             <Route path="/settings" component={SettingsView} />
+            <Route path="/suggested" component={SuggestedView} />
         </div>
     </Router>, document.getElementById('root'));

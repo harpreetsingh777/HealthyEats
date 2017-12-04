@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { Input, Button } from 'semantic-ui-react'
 
-import RecipeView from './RecipeView.jsx'
+import RecipeView from '../recipes_view/RecipeView.jsx'
 import Tabs from '../tabs_view/Tabs.jsx'
+import UserProfile from '../UserProfile'
 
-import './RecipesView.css'
-import UserProfile from "../UserProfile";
+import '../recipes_view/RecipesView.css'
 
-class RecipesView extends Component {
+class SuggestedView extends Component {
     constructor() {
         super();
         this.state = {
@@ -18,6 +18,7 @@ class RecipesView extends Component {
 
         this.searchRecipes = this.searchRecipes.bind(this);
         this.searchValueChange = this.searchValueChange.bind(this);
+
         this.recipeClick = this.recipeClick.bind(this);
         this.favoriteClick = this.favoriteClick.bind(this);
     }
@@ -46,7 +47,7 @@ class RecipesView extends Component {
                     key={idx}
                     recipeClick={this.recipeClick.bind(this, idx)}
                     favoriteClick={this.favoriteClick.bind(this, idx)}
-                    favoriteButtonString="Add Favorite"
+                    favoriteButtonString="Remove Favorite"
                 />
             );
         });
@@ -58,7 +59,7 @@ class RecipesView extends Component {
                     <Tabs />
                 </div>
                 <div className="listButtonsContainer">
-                    <Input placeholder='Search Recipes...' size='big' id='listInput'
+                    <Input placeholder='Search Favorites...' size='big' id='listInput'
                            onChange={this.searchValueChange}/>
                     <Button id="searchButton" onClick={this.searchRecipes}>
                         Search
@@ -82,49 +83,30 @@ class RecipesView extends Component {
     favoriteClick(idx, e) {
         e.stopPropagation();
 
-        let favoritedRecipe = this.state.recipes[idx];
+        let unfavoritedRecipe = this.state.recipes[idx];
 
         let username = UserProfile.getUsername();
-        let recipeName = favoritedRecipe.recipe_name;
-        let imageUrl = favoritedRecipe.image_url;
+        let recipeName = unfavoritedRecipe.recipe_name;
+        let imageUrl = unfavoritedRecipe.image_url;
 
-        let postObject = {
+        let deleteObject = {
             username: username,
             recipe_name: recipeName,
             image_url: imageUrl
         };
 
-        let data = JSON.stringify(postObject);
+        let data = JSON.stringify(deleteObject);
 
         let url = '/favorites';
 
         fetch(url, {
-            method: 'post',
+            method: 'delete',
             headers: {'Content-Type': 'application/json'},
             body: data
-        })
+        }).then((response) => this.fetchData())
     }
 
     searchRecipes(e) {
-        // LOG RECORD IN THE SEACRH RECORDS TABLE
-        let username = UserProfile.getUsername();
-        let searchItem = this.searchParam;
-        let postObject = {
-            username: username,
-            search_item: searchItem
-        };
-
-        let data = JSON.stringify(postObject);
-
-        let url = '/search';
-
-        fetch(url, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: data
-        });
-
-        // Now fetch the searched recipes
         this.fetchData();
     }
 
@@ -134,9 +116,11 @@ class RecipesView extends Component {
 
     fetchData() {
         let searchParam = this.searchParam;
+        let username = UserProfile.getUsername();
 
         if (!searchParam) {
-            fetch('/recipes')
+            let url = '/favorites/' + username;
+            fetch(url)
                 .then((response) => response.json())
                 .then((jsonResponse) => jsonResponse.data)
                 .then ((recipesData) => {
@@ -148,7 +132,7 @@ class RecipesView extends Component {
                     console.log(error);
                 })
         } else {
-            let url = '/recipes/' + searchParam;
+            let url = '/favorites/' + username + "/" + searchParam;
             fetch(url)
                 .then((response) => response.json())
                 .then((jsonResponse) => jsonResponse.data)
@@ -161,7 +145,9 @@ class RecipesView extends Component {
                     console.log(error);
                 })
         }
+
+
     }
 }
 
-export default RecipesView
+export default SuggestedView

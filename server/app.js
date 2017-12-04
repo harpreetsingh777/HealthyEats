@@ -45,6 +45,7 @@ app.use('/static', express.static(path.join(__dirname, 'public', 'static')));
 app.use('/recipes', routes.recipes);
 app.use('/users', routes.users);
 app.use('/favorites', routes.favorites);
+app.use('/search', routes.search);
 
 // Load React App
 // Serve HTML file for production

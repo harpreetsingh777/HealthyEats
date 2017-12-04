@@ -9,6 +9,8 @@ import './Tabs.css'
 import ListIcon from '../../assets/list_icon.svg'
 import FavoriteIcon from '../../assets/favorite_icon.svg'
 import SettingsIcon from '../../assets/setting_icon.svg'
+import SuggestedIcon from '../../assets/suggested_icon.svg'
+import LogoutIcon from '../../assets/logout_icon.svg'
 
 class Tabs extends Component {
 
@@ -32,6 +34,16 @@ class Tabs extends Component {
                                 </Button.Content>
                             </Button>
                         </Link>
+                        <Link to="/suggested">
+                            <Button animated='fade' inverted={false} size='huge' id="suggestedButton">
+                                <Button.Content visible>
+                                    <img src={SuggestedIcon} alt="suggested recipes"/>
+                                </Button.Content>
+                                <Button.Content hidden>
+                                    Top Picks
+                                </Button.Content>
+                            </Button>
+                        </Link>
                         <Link to="/favorites">
                             <Button animated='fade' inverted={false} size='huge' id="favoriteButton">
                                 <Button.Content visible>
@@ -49,6 +61,16 @@ class Tabs extends Component {
                                 </Button.Content>
                                 <Button.Content hidden>
                                     Settings
+                                </Button.Content>
+                            </Button>
+                        </Link>
+                        <Link to="/login">
+                            <Button animated='fade' inverted={false} size='huge' id="logoutButton">
+                                <Button.Content visible>
+                                    <img src={LogoutIcon} alt="logout"/>
+                                </Button.Content>
+                                <Button.Content hidden>
+                                    Log Out
                                 </Button.Content>
                             </Button>
                         </Link>

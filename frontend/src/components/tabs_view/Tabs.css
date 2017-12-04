@@ -24,6 +24,15 @@ body {
     margin-right: 4%;
 }
 
+#suggestedButton {
+    margin-right: 4%;
+}
+
+
 #settingButton {
+    margin-right: 4%;
+}
+
+#logoutButton {
     margin-right: 4%;
 }
