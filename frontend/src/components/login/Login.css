@@ -1,0 +1,26 @@
+.Login{
+	padding: 5%;
+    align-items: center;
+}
+
+
+#usernameInput{
+	margin: 10%;
+	margin-left: -10%;
+}
+
+#passwordInput{
+	margin-left: 10%;
+}
+
+#login{
+	margin-bottom: 2%;
+}
+
+#signup{
+    align-items: center;
+    display: flex;
+    margin-left: 45%;
+    margin-top: 2%;
+}
+
