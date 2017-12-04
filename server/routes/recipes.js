@@ -77,6 +77,81 @@ router.get('/ingredients/:recipe_name', function(req, res, next) {
     });
 });
 
+/* GET suggestions. */
+router.get('/suggestions/:username', function(req, res, next) {
+    mysqlLib.getConnection(function(err, connection) {
+        let username = connection.escape(req.params.username);
+
+        // FIRST MAKE A QUERY TO GET THE USER
+        let userQuery = "SELECT * FROM Users WHERE username=" + username;
+
+        connection.query(userQuery, function (err, result) {
+            if (err) {
+                sendError(res, err.message, 500);
+            } else {
+                let user = result[0];
+                let gender = connection.escape(user.gender);
+                let ageRange = connection.escape(user.age_range);
+                let activityLevel = connection.escape(user.activity_level);
+
+                if (gender === null || ageRange === null || activityLevel === null) {
+                    suggestGeneralRecipes(connection, res);
+                } else {
+                    suggestSpecificRecipes(connection, res, gender, ageRange, activityLevel);
+                }
+
+            }
+        });
+    });
+});
+
+function suggestGeneralRecipes(connection, res, username) {
+    let query = "SELECT * FROM Favorites LIMIT 50";
+
+    connection.query(query, function (err, result) {
+        if (err) {
+            sendError(res, err.message, 500);
+        } else {
+            res.status(200).send({
+                message: 'OK',
+                data: result
+            });
+        }
+    });
+}
+
+function suggestSpecificRecipes(connection, res, gender, ageRange, activityLevel) {
+    let caloriesQuery = "SELECT calories FROM CaloriesFinder WHERE " +
+        "gender=" + gender + " AND " +
+        "age_range=" + ageRange + " AND " +
+        "activity_level=" + activityLevel;
+
+    connection.query(caloriesQuery, function (err, result) {
+        if (err) {
+            sendError(res, err.message, 500);
+        } else {
+            let calories = result[0].calories;
+            let minCalorieRange = calories - 200;
+            let maxCalorieRange = calories + 200;
+
+            let suggestedRecipesQuery = "SELECT * FROM Recipes " +
+                "WHERE calories > " + minCalorieRange +
+                " AND calories < " + maxCalorieRange +
+                " LIMIT 50";
+            connection.query(suggestedRecipesQuery, function (err, result) {
+                if (err) {
+                    sendError(res, err.message, 500);
+                } else {
+                    res.status(200).send({
+                        message: 'OK',
+                        data: result
+                    });
+                }
+            });
+        }
+    });
+}
+
 // /* POST recipe. */
 // router.post('/', function(req, res, next) {
 //     mysqlLib.getConnection(function(err, connection) {
