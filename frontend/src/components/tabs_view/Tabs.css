@@ -13,13 +13,17 @@ body {
 }
 
 .buttonsContainer {
-    padding: 2%;
+    padding: 4%;
 }
 
-#recipesButton {
-    margin-right: 2%;
+#listButton {
+    margin-right: 4%;
 }
 
-#favoritesButton {
-    margin-left: 2%;
+#favoriteButton {
+    margin-right: 4%;
+}
+
+#settingButton {
+    margin-right: 4%;
 }

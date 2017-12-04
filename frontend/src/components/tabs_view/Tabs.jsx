@@ -8,6 +8,7 @@ import UserProfile from '../UserProfile'
 import './Tabs.css'
 import ListIcon from '../../assets/list_icon.svg'
 import FavoriteIcon from '../../assets/favorite_icon.svg'
+import SettingsIcon from '../../assets/setting_icon.svg'
 
 class Tabs extends Component {
 
@@ -32,12 +33,22 @@ class Tabs extends Component {
                             </Button>
                         </Link>
                         <Link to="/favorites">
-                            <Button animated='fade' inverted={false} size='huge' id="collectionButton">
+                            <Button animated='fade' inverted={false} size='huge' id="favoriteButton">
                                 <Button.Content visible>
                                     <img src={FavoriteIcon} alt="favorited recipes"/>
                                 </Button.Content>
                                 <Button.Content hidden>
                                     Favorites
+                                </Button.Content>
+                            </Button>
+                        </Link>
+                        <Link to="/settings">
+                            <Button animated='fade' inverted={false} size='huge' id="settingButton">
+                                <Button.Content visible>
+                                    <img src={SettingsIcon} alt="settings"/>
+                                </Button.Content>
+                                <Button.Content hidden>
+                                    Settings
                                 </Button.Content>
                             </Button>
                         </Link>

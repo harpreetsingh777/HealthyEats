@@ -59,7 +59,7 @@ class Login extends Component {
         let username = this.state.username;
         let password = this.state.password;
 
-        let url = '/users/' + username;
+        let url = '/users/user/' + username;
         fetch(url)
             .then((response) => response.json())
             .then((jsonResponse) => jsonResponse.data)
