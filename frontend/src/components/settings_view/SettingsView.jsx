@@ -5,30 +5,47 @@ import Tabs from '../tabs_view/Tabs.jsx'
 import './SettingsView.css'
 import UserProfile from "../UserProfile";
 
+let GenderOptionsEnum = {
+    Male: 0,
+    Female: 1
+};
+
+let AgeRangeOptionsEnum = {
+    Young: 0,
+    Middle: 1,
+    Old: 2
+};
+
+let ActivityLevelOptionsEnum = {
+    Low: 0,
+    Moderate: 1,
+    High: 2
+};
+
 const genderOptions = [
-    {text: "Male", value: "Male"},
-    {text: "Female", value: "Female"}
+    {text: "Male", value: GenderOptionsEnum.Male},
+    {text: "Female", value: GenderOptionsEnum.Female}
 ];
 
 const ageRangeOptions = [
-    {text: "0-18", value: "Young"},
-    {text: "18-50", value: "Middle"},
-    {text: "Above 50", value: "Old"}
+    {text: "0-18", value: AgeRangeOptionsEnum.Young},
+    {text: "18-50", value: AgeRangeOptionsEnum.Middle},
+    {text: "Above 50", value: AgeRangeOptionsEnum.Old}
 ];
 
 const activityLevelOptions = [
-    {text: "Low", value: "Low"},
-    {text: "Moderate", value: "Moderate"},
-    {text: "High", value: "High"}
+    {text: "Low", value: ActivityLevelOptionsEnum.Low},
+    {text: "Moderate", value: ActivityLevelOptionsEnum.Moderate},
+    {text: "High", value: ActivityLevelOptionsEnum.High}
 ];
 
 class SettingsView extends Component {
     constructor() {
         super();
         this.state = {
-            gender: null,
-            ageRange: null,
-            activityLevel: null
+            gender: -1,
+            ageRange: -1,
+            activityLevel: -1
         };
 
         this.setGender = this.setGender.bind(this);
@@ -43,6 +60,55 @@ class SettingsView extends Component {
     }
 
     render() {
+        let genderDropdown;
+        if (this.state.gender === -1) {
+            genderDropdown = <Dropdown placeholder="Gender"
+                                       selection
+                                       options={genderOptions}
+                                       onChange={this.setGender} size={'massive'}
+                                       id='genderDropdown'/>;
+        } else {
+            genderDropdown = <Dropdown placeholder="Gender"
+                                       selection
+                                       value = {this.state.gender}
+                                       options={genderOptions}
+                                       onChange={this.setGender} size={'massive'}
+                                       id='genderDropdown'/>;
+        }
+
+        let ageRangeDropdown;
+        if (this.state.ageRange === -1) {
+            ageRangeDropdown = <Dropdown placeholder="Age Range"
+                                         selection
+                                         options={ageRangeOptions}
+                                         onChange={this.setAgeRange} size={'massive'}
+                                         id='ageRangeDropdown'/>;
+        } else {
+            ageRangeDropdown = <Dropdown placeholder="Age Range"
+                                         selection
+                                         value = {this.state.ageRange}
+                                         options={ageRangeOptions}
+                                         onChange={this.setAgeRange} size={'massive'}
+                                         id='ageRangeDropdown'/>;
+        }
+
+        let activityLevelDropdown;
+        if (this.state.activityLevel === -1) {
+            activityLevelDropdown = <Dropdown placeholder="Activity Level"
+                                              selection
+                                              options={activityLevelOptions}
+                                              onChange={this.setActivityLevel} size={'massive'}
+                                              id='activityLevelDropdown'/>;
+        } else {
+            activityLevelDropdown = <Dropdown placeholder="Activity Level"
+                                              selection
+                                              value = {this.state.activityLevel}
+                                              options={activityLevelOptions}
+                                              onChange={this.setActivityLevel} size={'massive'}
+                                              id='activityLevelDropdown'/>;
+        }
+
+
         return (
             <div className="listMainContainer">
                 <div className="tabsContainer">
@@ -53,31 +119,19 @@ class SettingsView extends Component {
                         <Label size='big' color='black'>
                             Select Gender
                         </Label>
-                        <Dropdown placeholder="Gender"
-                                  selection defaultValue={0}
-                                  options={genderOptions}
-                                  onChange={this.setGender} size={'massive'}
-                                  id='genderDropdown'/>
+                        {genderDropdown}
                     </div>
                     <div>
                         <Label size='big' color='black'>
                             Select Age Range
                         </Label>
-                        <Dropdown placeholder="Age Range"
-                                  selection defaultValue={0}
-                                  options={ageRangeOptions}
-                                  onChange={this.setAgeRange} size={'massive'}
-                                  id='ageRangeDropdown'/>
+                        {ageRangeDropdown}
                     </div>
                     <div>
                         <Label size='big' color='black'>
                             Select Activity Level
                         </Label>
-                        <Dropdown placeholder="Activity Level"
-                                  selection defaultValue={0}
-                                  options={activityLevelOptions}
-                                  onChange={this.setActivityLevel} size={'massive'}
-                                  id='activityLevelDropdown'/>
+                        {activityLevelDropdown}
                     </div>
                 </div>
             </div>
@@ -93,9 +147,11 @@ class SettingsView extends Component {
             .then((response) => response.json())
             .then((jsonResponse) => jsonResponse.data)
             .then ((data) => {
-                console.log(data[0].gender);
+                let key = data[0].gender;
+                let value = GenderOptionsEnum[key];
+
                 this.setState({
-                    gender: data[0].gender
+                    gender: value
                 });
             })
             .catch((error) => {
@@ -111,9 +167,11 @@ class SettingsView extends Component {
             .then((response) => response.json())
             .then((jsonResponse) => jsonResponse.data)
             .then ((data) => {
-                console.log(data[0].age_range);
+                let key = data[0].age_range;
+                let value = AgeRangeOptionsEnum[key];
+
                 this.setState({
-                    ageRange: data[0].age_range
+                    ageRange: value
                 });
             })
             .catch((error) => {
@@ -129,9 +187,11 @@ class SettingsView extends Component {
             .then((response) => response.json())
             .then((jsonResponse) => jsonResponse.data)
             .then ((data) => {
-                console.log(data[0].activity_level);
+                let key = data[0].activity_level;
+                let value = ActivityLevelOptionsEnum[key];
+
                 this.setState({
-                    activityLevel: data[0].activity_level
+                    activityLevel: value
                 });
             })
             .catch((error) => {
@@ -141,7 +201,9 @@ class SettingsView extends Component {
 
     setGender(e, data) {
         let username = UserProfile.getUsername();
-        let gender = data.value;
+
+        let gender = Object.keys(GenderOptionsEnum).find(k =>
+                                GenderOptionsEnum[k] === data.value);
 
         let putObject = {
             username: username,
@@ -156,12 +218,17 @@ class SettingsView extends Component {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: bodyData
-        })
+        });
+
+        this.setState({
+            gender: data.value
+        });
     }
 
     setAgeRange(e, data) {
         let username = UserProfile.getUsername();
-        let ageRange = data.value;
+        let ageRange = Object.keys(AgeRangeOptionsEnum).find(k =>
+            AgeRangeOptionsEnum[k] === data.value);
 
         let putObject = {
             username: username,
@@ -176,12 +243,17 @@ class SettingsView extends Component {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: bodyData
-        })
+        });
+
+        this.setState({
+            ageRange: data.value
+        });
     }
 
     setActivityLevel(e, data) {
         let username = UserProfile.getUsername();
-        let activityLevel = data.value;
+        let activityLevel = Object.keys(ActivityLevelOptionsEnum).find(k =>
+            ActivityLevelOptionsEnum[k] === data.value);
 
         let putObject = {
             username: username,
@@ -196,7 +268,11 @@ class SettingsView extends Component {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: bodyData
-        })
+        });
+
+        this.setState({
+            activityLevel: data.value
+        });
     }
 }
 
