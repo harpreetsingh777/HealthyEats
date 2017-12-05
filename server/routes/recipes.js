@@ -3,7 +3,7 @@ let router = express.Router();
 let mysqlLib = require("../mySqlLib");
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
     mysqlLib.getConnection(function(err, connection) {
         let query = "SELECT * FROM Recipes LIMIT 50";
 
@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET single recipe listing. */
-router.get('/:recipe_name', function(req, res, next) {
+router.get('/:recipe_name', function(req, res) {
     mysqlLib.getConnection(function(err, connection) {
         let recipe_name = req.params.recipe_name;
         let query = "SELECT * FROM Recipes WHERE recipe_name " +
@@ -41,7 +41,7 @@ router.get('/:recipe_name', function(req, res, next) {
 });
 
 /* GET ingredients listing. */
-router.get('/ingredients/all', function(req, res, next) {
+router.get('/ingredients/all', function(req, res) {
     mysqlLib.getConnection(function(err, connection) {
         let query = "SELECT * FROM Ingredients";
 
@@ -59,7 +59,7 @@ router.get('/ingredients/all', function(req, res, next) {
 });
 
 /* GET ingredients listing for a certain recipe. */
-router.get('/ingredients/:recipe_name', function(req, res, next) {
+router.get('/ingredients/:recipe_name', function(req, res) {
     mysqlLib.getConnection(function(err, connection) {
         let recipe_name = connection.escape(req.params.recipe_name);
         let query = "SELECT * FROM Ingredients WHERE recipe_name = " + recipe_name;
@@ -78,7 +78,7 @@ router.get('/ingredients/:recipe_name', function(req, res, next) {
 });
 
 /* GET suggestions. */
-router.get('/suggestions/:username', function(req, res, next) {
+router.get('/suggestions/:username', function(req, res) {
     mysqlLib.getConnection(function(err, connection) {
         let username = connection.escape(req.params.username);
 
@@ -94,19 +94,20 @@ router.get('/suggestions/:username', function(req, res, next) {
                 let ageRange = connection.escape(user.age_range);
                 let activityLevel = connection.escape(user.activity_level);
 
-                if (gender === null || ageRange === null || activityLevel === null) {
+                if (user.gender === null || user.ageRange === null
+                    || user.activityLevel === null) {
                     suggestGeneralRecipes(connection, res);
                 } else {
-                    suggestSpecificRecipes(connection, res, gender, ageRange, activityLevel);
+                    suggestSpecificRecipes(connection, res,
+                        gender, ageRange, activityLevel);
                 }
-
             }
         });
     });
 });
 
-function suggestGeneralRecipes(connection, res, username) {
-    let query = "SELECT * FROM Favorites LIMIT 50";
+function suggestGeneralRecipes(connection, res) {
+    let query = "SELECT * FROM SuggestedView LIMIT 50";
 
     connection.query(query, function (err, result) {
         if (err) {
