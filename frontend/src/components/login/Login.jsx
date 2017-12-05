@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Input, Button, Label } from 'semantic-ui-react'
 
 import UserProfile from '../UserProfile'
+import './Login.css'
 
 class Login extends Component {
     constructor() {
@@ -21,7 +22,7 @@ class Login extends Component {
         return(
             <div className="Login">
                 <Label size='massive' color='black'>Login</Label>
-                <div>
+                <div className = 'inputBoxes'>
                     <Input placeholder='Username' size='big'
                            onChange = {this.usernameChange} id='usernameInput'/>
                     <Input placeholder='Password' size='big'
