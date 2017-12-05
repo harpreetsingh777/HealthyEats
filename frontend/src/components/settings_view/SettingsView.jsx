@@ -183,7 +183,7 @@ class SettingsView extends Component {
         let gender = this.gender;
         let ageRange = this.ageRange;
         let activityLevel = this.activityLevel;
-        
+
         let putObject = {
             username: username,
             gender: gender,

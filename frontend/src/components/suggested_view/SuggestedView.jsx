@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Input, Button } from 'semantic-ui-react'
 
 import RecipeView from '../recipes_view/RecipeView.jsx'
 import Tabs from '../tabs_view/Tabs.jsx'
@@ -14,10 +13,6 @@ class SuggestedView extends Component {
             recipes: []
         };
 
-        this.searchParam = "";
-
-        this.searchRecipes = this.searchRecipes.bind(this);
-        this.searchValueChange = this.searchValueChange.bind(this);
         this.recipeClick = this.recipeClick.bind(this);
         this.favoriteClick = this.favoriteClick.bind(this);
     }
@@ -56,13 +51,6 @@ class SuggestedView extends Component {
             <div className="listMainContainer">
                 <div className="tabsContainer">
                     <Tabs />
-                </div>
-                <div className="listButtonsContainer">
-                    <Input placeholder='Search Recipes...' size='big' id='listInput'
-                           onChange={this.searchValueChange}/>
-                    <Button id="searchButton" onClick={this.searchRecipes}>
-                        Search
-                    </Button>
                 </div>
                 <div className="listRecipesContainer">
                     {recipeCards}
@@ -103,33 +91,6 @@ class SuggestedView extends Component {
             headers: {'Content-Type': 'application/json'},
             body: data
         })
-    }
-
-    searchRecipes(e) {
-        // LOG RECORD IN THE SEACRH RECORDS TABLE
-        let username = UserProfile.getUsername();
-        let searchItem = this.searchParam;
-        let postObject = {
-            username: username,
-            search_item: searchItem
-        };
-
-        let data = JSON.stringify(postObject);
-
-        let url = '/search';
-
-        fetch(url, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: data
-        });
-
-        // Now fetch the searched recipes
-        this.fetchData();
-    }
-
-    searchValueChange(e) {
-        this.searchParam = e.target.value;
     }
 
     fetchData() {

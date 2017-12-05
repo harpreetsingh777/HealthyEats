@@ -23,9 +23,8 @@ router.get('/', function(req, res) {
 /* GET single recipe listing. */
 router.get('/:recipe_name', function(req, res) {
     mysqlLib.getConnection(function(err, connection) {
-        let recipe_name = req.params.recipe_name;
-        let query = "SELECT * FROM Recipes WHERE recipe_name " +
-            "LIKE \"%" + recipe_name + "%\" LIMIT 50";
+        let recipe_name = connection.escape(req.params.recipe_name);
+        let query = "CALL SearchRecipes(" + recipe_name + ")";
 
         connection.query(query, function (err, result) {
             if (err) {
@@ -33,7 +32,7 @@ router.get('/:recipe_name', function(req, res) {
             } else {
                 res.status(200).send({
                     message: 'OK',
-                    data: result
+                    data: result[0]
                 });
             }
         });
