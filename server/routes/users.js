@@ -38,66 +38,6 @@ router.get('/user/:username', function(req, res, next) {
     });
 });
 
-// Get gender
-router.get('/gender/:username', function(req, res, next) {
-    mysqlLib.getConnection(function(err, connection) {
-        let username = connection.escape(req.params.username);
-
-        let query = "SELECT gender from Users WHERE username=" + username;
-
-        connection.query(query, function (err, result) {
-            if (err) {
-                sendError(res, err.message, 500);
-            } else {
-                res.status(200).send({
-                    message: 'Not OK',
-                    data: result
-                });
-            }
-        });
-    });
-});
-
-// Get age range
-router.get('/age_range/:username', function(req, res, next) {
-    mysqlLib.getConnection(function(err, connection) {
-        let username = connection.escape(req.params.username);
-
-        let query = "SELECT age_range from Users WHERE username=" + username;
-
-        connection.query(query, function (err, result) {
-            if (err) {
-                sendError(res, err.message, 500);
-            } else {
-                res.status(200).send({
-                    message: 'OK',
-                    data: result
-                });
-            }
-        });
-    });
-});
-
-// Get activity level
-router.get('/activity_level/:username', function(req, res, next) {
-    mysqlLib.getConnection(function(err, connection) {
-        let username = connection.escape(req.params.username);
-
-        let query = "SELECT activity_level from Users WHERE username=" + username;
-
-        connection.query(query, function (err, result) {
-            if (err) {
-                sendError(res, err.message, 500);
-            } else {
-                res.status(200).send({
-                    message: 'OK',
-                    data: result
-                });
-            }
-        });
-    });
-});
-
 
 /* POST user. */
 router.post('/', function(req, res, next) {
@@ -128,54 +68,17 @@ router.post('/', function(req, res, next) {
 });
 
 // Put gender
-router.put('/gender', function(req, res, next) {
+router.put('/settings', function(req, res, next) {
     mysqlLib.getConnection(function(err, connection) {
         let username = connection.escape(req.body.username);
         let gender = connection.escape(req.body.gender);
-
-        let query = "UPDATE Users SET gender=" + gender + " WHERE username=" + username;
-
-        connection.query(query, function (err, result) {
-            if (err) {
-                sendError(res, err.message, 500);
-            } else {
-                res.status(200).send({
-                    message: 'OK',
-                    data: result
-                });
-            }
-        });
-    });
-});
-
-// Put age range
-router.put('/age_range', function(req, res, next) {
-    mysqlLib.getConnection(function(err, connection) {
-        let username = connection.escape(req.body.username);
         let ageRange = connection.escape(req.body.age_range);
-
-        let query = "UPDATE Users SET age_range=" + ageRange + " WHERE username=" + username;
-
-        connection.query(query, function (err, result) {
-            if (err) {
-                sendError(res, err.message, 500);
-            } else {
-                res.status(200).send({
-                    message: 'OK',
-                    data: result
-                });
-            }
-        });
-    });
-});
-
-// Put activity level
-router.put('/activity_level', function(req, res, next) {
-    mysqlLib.getConnection(function(err, connection) {
-        let username = connection.escape(req.body.username);
         let activityLevel = connection.escape(req.body.activity_level);
 
-        let query = "UPDATE Users SET activity_level=" + activityLevel + " WHERE username=" + username;
+        let query = "UPDATE Users SET gender=" + gender +
+            ", age_range=" + ageRange +
+            ", activity_level=" + activityLevel +
+            " WHERE username=" + username;
 
         connection.query(query, function (err, result) {
             if (err) {
@@ -183,7 +86,7 @@ router.put('/activity_level', function(req, res, next) {
             } else {
                 res.status(200).send({
                     message: 'OK',
-                    data: result
+                    data: gender
                 });
             }
         });

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Label, Dropdown } from 'semantic-ui-react'
+import { Button, Label, Dropdown } from 'semantic-ui-react'
 import Tabs from '../tabs_view/Tabs.jsx'
 
 import './SettingsView.css'
@@ -48,15 +48,19 @@ class SettingsView extends Component {
             activityLevel: -1
         };
 
+        this.gender = "";
+        this.ageRange = "";
+        this.activityLevel = "";
+
         this.setGender = this.setGender.bind(this);
         this.setAgeRange = this.setAgeRange.bind(this);
         this.setActivityLevel = this.setActivityLevel.bind(this);
+
+        this.saveUserSettings = this.saveUserSettings.bind(this);
     }
 
     componentDidMount() {
-        this.getGender();
-        this.getAgeLevel();
-        this.getActivityLevel();
+        this.populateDropdowns();
     }
 
     render() {
@@ -134,24 +138,38 @@ class SettingsView extends Component {
                         {activityLevelDropdown}
                     </div>
                 </div>
+                <div className="listButtonsContainer">
+                    <Button size='big' id="saveButton" onClick={this.saveUserSettings}>
+                        Save
+                    </Button>
+                </div>
             </div>
         )
     }
 
     // Handers
-    getGender() {
+    populateDropdowns() {
         let username = UserProfile.getUsername();
 
-        let url = "/users/gender/" + username;
+        let url = '/users/user/' + username;
         fetch(url)
             .then((response) => response.json())
             .then((jsonResponse) => jsonResponse.data)
-            .then ((data) => {
-                let key = data[0].gender;
-                let value = GenderOptionsEnum[key];
+            .then((users) => {
+                let user = users[0];
+
+                let genderKey = user.gender;
+                let ageRangeKey = user.age_range;
+                let activityLevelKey = user.activity_level;
+
+                let genderValue = GenderOptionsEnum[genderKey];
+                let ageRangeValue = AgeRangeOptionsEnum[ageRangeKey];
+                let activityLevelValue = ActivityLevelOptionsEnum[activityLevelKey];
 
                 this.setState({
-                    gender: value
+                    gender: genderValue,
+                    ageRange: ageRangeValue,
+                    activityLevel: activityLevelValue
                 });
             })
             .catch((error) => {
@@ -159,117 +177,50 @@ class SettingsView extends Component {
             });
     }
 
-    getAgeLevel() {
+    saveUserSettings() {
         let username = UserProfile.getUsername();
 
-        let url = "/users/age_range/" + username;
-        fetch(url)
-            .then((response) => response.json())
-            .then((jsonResponse) => jsonResponse.data)
-            .then ((data) => {
-                let key = data[0].age_range;
-                let value = AgeRangeOptionsEnum[key];
-
-                this.setState({
-                    ageRange: value
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    getActivityLevel() {
-        let username = UserProfile.getUsername();
-
-        let url = "/users/activity_level/" + username;
-        fetch(url)
-            .then((response) => response.json())
-            .then((jsonResponse) => jsonResponse.data)
-            .then ((data) => {
-                let key = data[0].activity_level;
-                let value = ActivityLevelOptionsEnum[key];
-
-                this.setState({
-                    activityLevel: value
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    setGender(e, data) {
-        let username = UserProfile.getUsername();
-
-        let gender = Object.keys(GenderOptionsEnum).find(k =>
-                                GenderOptionsEnum[k] === data.value);
-
+        let gender = this.gender;
+        let ageRange = this.ageRange;
+        let activityLevel = this.activityLevel;
+        
         let putObject = {
             username: username,
-            gender: gender
+            gender: gender,
+            age_range: ageRange,
+            activity_level: activityLevel
         };
 
         let bodyData = JSON.stringify(putObject);
 
-        let url = '/users/gender';
+        let url = '/users/settings';
 
         fetch(url, {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: bodyData
         });
+    }
 
+    setGender(e, data) {
+        this.gender = Object.keys(GenderOptionsEnum).find(k =>
+            GenderOptionsEnum[k] === data.value);
         this.setState({
             gender: data.value
         });
     }
 
     setAgeRange(e, data) {
-        let username = UserProfile.getUsername();
-        let ageRange = Object.keys(AgeRangeOptionsEnum).find(k =>
+        this.ageRange = Object.keys(AgeRangeOptionsEnum).find(k =>
             AgeRangeOptionsEnum[k] === data.value);
-
-        let putObject = {
-            username: username,
-            age_range: ageRange
-        };
-
-        let bodyData = JSON.stringify(putObject);
-
-        let url = '/users/age_range';
-
-        fetch(url, {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: bodyData
-        });
-
         this.setState({
             ageRange: data.value
         });
     }
 
     setActivityLevel(e, data) {
-        let username = UserProfile.getUsername();
-        let activityLevel = Object.keys(ActivityLevelOptionsEnum).find(k =>
+        this.activityLevel = Object.keys(ActivityLevelOptionsEnum).find(k =>
             ActivityLevelOptionsEnum[k] === data.value);
-
-        let putObject = {
-            username: username,
-            activity_level: activityLevel
-        };
-
-        let bodyData = JSON.stringify(putObject);
-
-        let url = '/users/activity_level';
-
-        fetch(url, {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: bodyData
-        });
-
         this.setState({
             activityLevel: data.value
         });
