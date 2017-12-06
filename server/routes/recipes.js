@@ -77,6 +77,10 @@ router.get('/ingredients/:recipe_name', function(req, res) {
 });
 
 /* GET suggestions. */
+// if (no setting and no search):result from suggested_view
+// if (no setting but searches): result from searches
+// if (settings but no searches): result based on calories (calculated using settings)
+// if (settings and searches): result based on calories as well as searches
 router.get('/suggestions/:username', function(req, res) {
     mysqlLib.getConnection(function(err, connection) {
         let username = connection.escape(req.params.username);
@@ -95,7 +99,7 @@ router.get('/suggestions/:username', function(req, res) {
 
                 if (user.gender === null || user.ageRange === null
                     || user.activityLevel === null) {
-                    suggestGeneralRecipes(connection, res);
+                    suggestGeneralRecipes(connection, res, username);
                 } else {
                     suggestSpecificRecipes1(connection, res,
                         gender, ageRange, activityLevel, username);
@@ -105,16 +109,42 @@ router.get('/suggestions/:username', function(req, res) {
     });
 });
 
-function suggestGeneralRecipes(connection, res) {
-    let query = "SELECT * FROM SuggestedView LIMIT 50";
+function suggestGeneralRecipes(connection, res, username) {
+    let recentlySearchedItemsQuery =
+        "SELECT search_item FROM SearchRecords WHERE username=" + username;
 
-    connection.query(query, function (err, result) {
+    connection.query(recentlySearchedItemsQuery, function (err, result) {
         if (err) {
             sendError(res, err.message, 500);
         } else {
-            res.status(200).send({
-                message: 'OK',
-                data: result
+            let suggestedRecipesQuery;
+
+            if (result.length === 0) {
+                suggestedRecipesQuery = "SELECT * FROM SuggestedView LIMIT 50";
+            } else {
+                suggestedRecipesQuery = "SELECT * FROM Recipes " +
+                    "WHERE (recipe_name LIKE '%";
+
+                let searchItemsArray = [];
+                for (let i = 0; i < result.length; i++) {
+                    let searchItem = result[i];
+
+                    searchItemsArray.push(searchItem.search_item);
+                }
+
+                suggestedRecipesQuery += searchItemsArray.join("%' OR recipe_name LIKE '%");
+                suggestedRecipesQuery += "%') LIMIT 50";
+            }
+
+            connection.query(suggestedRecipesQuery, function (err, result) {
+                if (err) {
+                    sendError(res, err.message, 500);
+                } else {
+                    res.status(200).send({
+                        message: 'OK',
+                        data: result
+                    });
+                }
             });
         }
     });
@@ -149,20 +179,28 @@ function suggestSpecificRecipes2(connection, res, username,
         if (err) {
             sendError(res, err.message, 500);
         } else {
-            let suggestedRecipesQuery = "SELECT * FROM Recipes " +
+            let suggestedRecipesQuery;
+
+            if (result.length === 0) {
+                suggestedRecipesQuery = "SELECT * FROM Recipes " +
+                    "WHERE calories > " + minCalorieRange +
+                    " AND calories < " + maxCalorieRange + " LIMIT 50";
+            } else {
+                suggestedRecipesQuery = "SELECT * FROM Recipes " +
                     "WHERE calories > " + minCalorieRange +
                     " AND calories < " + maxCalorieRange +
                     " AND (recipe_name LIKE '%";
 
-            let searchItemsArray = [];
-            for (let i = 0; i < result.length; i++) {
-                let searchItem = result[i];
+                let searchItemsArray = [];
+                for (let i = 0; i < result.length; i++) {
+                    let searchItem = result[i];
 
-                searchItemsArray.push(searchItem.search_item);
+                    searchItemsArray.push(searchItem.search_item);
+                }
+
+                suggestedRecipesQuery += searchItemsArray.join("%' OR recipe_name LIKE '%");
+                suggestedRecipesQuery += "%') LIMIT 50";
             }
-
-            suggestedRecipesQuery += searchItemsArray.join("%' OR recipe_name LIKE '%");
-            suggestedRecipesQuery += "%') LIMIT 50";
 
             connection.query(suggestedRecipesQuery, function (err, result) {
                 if (err) {
