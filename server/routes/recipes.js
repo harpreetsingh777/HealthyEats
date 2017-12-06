@@ -97,8 +97,8 @@ router.get('/suggestions/:username', function(req, res) {
                     || user.activityLevel === null) {
                     suggestGeneralRecipes(connection, res);
                 } else {
-                    suggestSpecificRecipes(connection, res,
-                        gender, ageRange, activityLevel);
+                    suggestSpecificRecipes1(connection, res,
+                        gender, ageRange, activityLevel, username);
                 }
             }
         });
@@ -120,7 +120,7 @@ function suggestGeneralRecipes(connection, res) {
     });
 }
 
-function suggestSpecificRecipes(connection, res, gender, ageRange, activityLevel) {
+function suggestSpecificRecipes1(connection, res, gender, ageRange, activityLevel, username) {
     let caloriesQuery = "SELECT calories FROM CaloriesFinder WHERE " +
         "gender=" + gender + " AND " +
         "age_range=" + ageRange + " AND " +
@@ -134,10 +134,36 @@ function suggestSpecificRecipes(connection, res, gender, ageRange, activityLevel
             let minCalorieRange = calories - 200;
             let maxCalorieRange = calories + 200;
 
+            suggestSpecificRecipes2(connection, res, username,
+                minCalorieRange, maxCalorieRange);
+        }
+    });
+}
+
+function suggestSpecificRecipes2(connection, res, username,
+                                 minCalorieRange, maxCalorieRange) {
+    let recentlySearchedItemsQuery =
+        "SELECT search_item FROM SearchRecords WHERE username=" + username;
+
+    connection.query(recentlySearchedItemsQuery, function (err, result) {
+        if (err) {
+            sendError(res, err.message, 500);
+        } else {
             let suggestedRecipesQuery = "SELECT * FROM Recipes " +
-                "WHERE calories > " + minCalorieRange +
-                " AND calories < " + maxCalorieRange +
-                " LIMIT 50";
+                    "WHERE calories > " + minCalorieRange +
+                    " AND calories < " + maxCalorieRange +
+                    " AND (recipe_name LIKE '%";
+
+            let searchItemsArray = [];
+            for (let i = 0; i < result.length; i++) {
+                let searchItem = result[i];
+
+                searchItemsArray.push(searchItem.search_item);
+            }
+
+            suggestedRecipesQuery += searchItemsArray.join("%' OR recipe_name LIKE '%");
+            suggestedRecipesQuery += "%') LIMIT 50";
+
             connection.query(suggestedRecipesQuery, function (err, result) {
                 if (err) {
                     sendError(res, err.message, 500);
@@ -150,6 +176,23 @@ function suggestSpecificRecipes(connection, res, gender, ageRange, activityLevel
             });
         }
     });
+
+
+    // let suggestedRecipesQuery = "SELECT * FROM Recipes " +
+    //     "WHERE calories > " + minCalorieRange +
+    //     " AND calories < " + maxCalorieRange +
+    //     " LIMIT 50";
+    //
+    // connection.query(suggestedRecipesQuery, function (err, result) {
+    //     if (err) {
+    //         sendError(res, err.message, 500);
+    //     } else {
+    //         res.status(200).send({
+    //             message: 'OK',
+    //             data: result
+    //         });
+    //     }
+    // });
 }
 
 // /* POST recipe. */
