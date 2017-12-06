@@ -48,10 +48,6 @@ class SettingsView extends Component {
             activityLevel: -1
         };
 
-        this.gender = "";
-        this.ageRange = "";
-        this.activityLevel = "";
-
         this.setGender = this.setGender.bind(this);
         this.setAgeRange = this.setAgeRange.bind(this);
         this.setActivityLevel = this.setActivityLevel.bind(this);
@@ -161,6 +157,11 @@ class SettingsView extends Component {
                 let genderKey = user.gender;
                 let ageRangeKey = user.age_range;
                 let activityLevelKey = user.activity_level;
+                if (genderKey === null
+                    || ageRangeKey == null
+                    || activityLevelKey == null) {
+                    return;
+                }
 
                 let genderValue = GenderOptionsEnum[genderKey];
                 let ageRangeValue = AgeRangeOptionsEnum[ageRangeKey];
@@ -179,10 +180,19 @@ class SettingsView extends Component {
 
     saveUserSettings() {
         let username = UserProfile.getUsername();
+        if (this.state.gender === -1
+            || this.state.ageRange === -1
+            || this.state.activityLevel === -1) {
+            alert('Choose Values for All Categories Before Saving');
+            return;
+        }
 
-        let gender = this.gender;
-        let ageRange = this.ageRange;
-        let activityLevel = this.activityLevel;
+        let gender = Object.keys(GenderOptionsEnum).find(k =>
+            GenderOptionsEnum[k] === this.state.gender);
+        let ageRange = Object.keys(AgeRangeOptionsEnum).find(k =>
+            AgeRangeOptionsEnum[k] === this.state.ageRange);
+        let activityLevel = Object.keys(ActivityLevelOptionsEnum).find(k =>
+            ActivityLevelOptionsEnum[k] === this.state.activityLevel);
 
         let putObject = {
             username: username,
@@ -199,28 +209,25 @@ class SettingsView extends Component {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: bodyData
-        });
+        }).then(alert('Successfully Saved!'))
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
     setGender(e, data) {
-        this.gender = Object.keys(GenderOptionsEnum).find(k =>
-            GenderOptionsEnum[k] === data.value);
         this.setState({
             gender: data.value
         });
     }
 
     setAgeRange(e, data) {
-        this.ageRange = Object.keys(AgeRangeOptionsEnum).find(k =>
-            AgeRangeOptionsEnum[k] === data.value);
         this.setState({
             ageRange: data.value
         });
     }
 
     setActivityLevel(e, data) {
-        this.activityLevel = Object.keys(ActivityLevelOptionsEnum).find(k =>
-            ActivityLevelOptionsEnum[k] === data.value);
         this.setState({
             activityLevel: data.value
         });

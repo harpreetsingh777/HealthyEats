@@ -102,7 +102,10 @@ class RecipesView extends Component {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: data
-        })
+        }).then(alert('Successfully Added Favorite!'))
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
     searchRecipes(e) {
