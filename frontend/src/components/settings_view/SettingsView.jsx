@@ -223,7 +223,7 @@ class SettingsView extends Component {
 
     deactivateUser() {
         let username = UserProfile.getUsername();
-        
+
         let deleteObject = {
             username: username
         };

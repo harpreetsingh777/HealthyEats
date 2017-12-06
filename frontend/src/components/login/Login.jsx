@@ -65,17 +65,21 @@ class Login extends Component {
             .then((response) => response.json())
             .then((jsonResponse) => jsonResponse.data)
             .then((users) => {
-                let user = users[0];
-                if (password === user.password) {
-                    UserProfile.setUsername(user.username);
-                    UserProfile.setFirstName(user.first_name);
-                    UserProfile.setLastName(user.last_name);
-
-                    this.props.history.push({
-                        pathname: '/recipes',
-                    });
+                if (users.length === 0) {
+                    alert('User not found!');
                 } else {
-                    console.log('login unsuccessful');
+                    let user = users[0];
+                    if (password === user.password) {
+                        UserProfile.setUsername(user.username);
+                        UserProfile.setFirstName(user.first_name);
+                        UserProfile.setLastName(user.last_name);
+
+                        this.props.history.push({
+                            pathname: '/recipes',
+                        });
+                    } else {
+                        alert('Incorrect password!');
+                    }
                 }
             })
             .catch((error) => {
