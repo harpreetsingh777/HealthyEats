@@ -53,6 +53,7 @@ class SettingsView extends Component {
         this.setActivityLevel = this.setActivityLevel.bind(this);
 
         this.saveUserSettings = this.saveUserSettings.bind(this);
+        this.deactivateUser = this.deactivateUser.bind(this);
     }
 
     componentDidMount() {
@@ -139,6 +140,11 @@ class SettingsView extends Component {
                         Save
                     </Button>
                 </div>
+                <div className="listButtonsContainer">
+                    <Button size='small' inverted='true' id="deactivateButton" onClick={this.deactivateUser}>
+                        Deactivate Account
+                    </Button>
+                </div>
             </div>
         )
     }
@@ -213,6 +219,29 @@ class SettingsView extends Component {
             .catch((error) => {
                 console.log(error);
             })
+    }
+
+    deactivateUser() {
+        let username = UserProfile.getUsername();
+        
+        let deleteObject = {
+            username: username
+        };
+
+        let data = JSON.stringify(deleteObject);
+
+        let url = '/users';
+
+        fetch(url, {
+            method: 'delete',
+            headers: {'Content-Type': 'application/json'},
+            body: data
+        }).then(() => {
+            alert('Your account has been deactivated!');
+            this.props.history.push({
+                pathname: '/login'
+            });
+        });
     }
 
     setGender(e, data) {
